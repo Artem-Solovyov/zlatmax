@@ -1,0 +1,35 @@
+$maxWidthContainer: 1200;
+
+@mixin adaptive-value($property, $startSize, $minSize, $type: 1, $minWidth: 320) {
+    $addSize: $startSize - $minSize;
+
+    @if $type==1 {
+        // меньше контейнера
+        #{$property}: $startSize + px;
+        @media (max-width: #{$maxWidthContainer + px}) {
+            #{$property}: calc(
+                #{$minSize + px} + #{$addSize} * ((100vw - #{$minWidth + px}) / #{$maxWidthContainer - $minWidth})
+            );
+        }
+    } @else if $type==2 {
+        // только если больше контейнера
+        #{$property}: $startSize + px;
+        @media (min-width: #{$maxWidthContainer + px}) {
+            #{$property}: calc(#{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidthContainer - 320}));
+        }
+    } @else {
+        // всегда
+        #{$property}: calc(
+            #{$minSize + px} + #{$addSize} * ((100vw - #{$minWidth + px}) / #{$maxWidthContainer - $minWidth})
+        );
+    }
+}
+
+@function rem($px) {
+    $result: math.div($px, 16) + rem;
+    @return $result;
+}
+@function em($px, $px1: 16) {
+    $result: math.div($px, $px1) + em;
+    @return $result;
+}
